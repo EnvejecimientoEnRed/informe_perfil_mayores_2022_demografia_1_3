@@ -86,8 +86,44 @@ export function initChart(iframe) {
         // LÓGICA DE LA PIRÁMIDE
         /////
         /////
+
+        ///Valores iniciales de altura, anchura y márgenes
+        let margin = {top: 20, right: 30, bottom: 40, left: 90},
+            width = document.getElementById('chart').clientWidth - margin.left - margin.right,
+            height = document.getElementById('chart').clientHeight - margin.top - margin.bottom;
+
+        let svg = d3.select("#chart")
+            .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            let x = d3.scaleLinear()
+                .domain([-40000,40000])
+                .range([0,width]);
+
+            let xM = d3.scaleLinear()
+                .domain([-40000,0])
+                .range([0, width / 2]);
+
+            let xF = d3.scaleLinear()
+                .domain([0,40000])
+                .range([width / 2, width]);
+    
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+    
+            let y = d3.scaleBand()
+                    .range([ 0, height ])
+                    .domain(d3.range(102).reverse())
+                    .padding(.1);
+    
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
         function initPyramid(year) { //2021
-            console.log(data);
 
             let currentData = data.filter( function(item) {
                 if (year == parseInt(item.Periodo)) {
@@ -95,7 +131,15 @@ export function initChart(iframe) {
                 }
             });
 
-            console.log(currentData);
+            svg.append("g")
+                .selectAll("rect")
+                .data(currentData)
+                .join("rect")
+                .attr("fill", 'red')
+                .attr("x", d => d.sex === "M" ? xM(d.value) : xF(0))
+                .attr("y", function(d) { return y(d.edades); })
+                .attr("width", d => d.sex === "M" ? xM(0) - xM(d.value) : xF(d.value) - xF(0))
+                .attr("height", y.bandwidth());
 
         }
 
