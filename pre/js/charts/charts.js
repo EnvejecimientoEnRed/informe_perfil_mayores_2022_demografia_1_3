@@ -23,7 +23,7 @@ export function initChart(iframe) {
     //Creación de otros elementos relativos al gráfico que no requieran lectura previa de datos > Selectores múltiples o simples, timelines, etc 
 
     //Lectura de datos
-    d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_demografia_1_3/main/data/evolucion_poblacion_1908_2035.csv', function(error,data) {
+    d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_demografia_1_3/main/data/evolucion_poblacion_1908_2035_v2.csv', function(error,data) {
         if (error) throw error;
 
         ////////
@@ -32,7 +32,7 @@ export function initChart(iframe) {
         //////
         ///////
         let currentValue = 2021;
-        const firstValue = 1907;
+        const firstValue = 1908;
         const lastValue = 2035;
 
         let sliderRange = document.getElementById('slider');
@@ -44,7 +44,7 @@ export function initChart(iframe) {
         function createTimeslider(){        
             /* Los siguientes eventos tienen la capacidad de modificar lo que se muestra en el mapa */
             playButton.onclick = function () {
-                sliderInterval = setInterval(setNewValue,2000);
+                sliderInterval = setInterval(setNewValue,1000);
                 playButton.style.display = 'none';
                 pauseButton.style.display = 'inline-block';    
             }
@@ -56,16 +56,18 @@ export function initChart(iframe) {
             }
         
             sliderRange.oninput = function () {
-                setNewValue();
                 sliderDate.innerHTML = this.value;
+                setNewValue('input');                
             }
         }
         
         /* Da nuevos valores al slider */
-        function setNewValue() {
+        function setNewValue(type = undefined) {
             let value = parseInt(sliderRange.value);
-            if(value == lastValue) {
+            if (value == lastValue && !type) {
                 sliderRange.value = firstValue;
+            } else if (value == firstValue && type) {
+                sliderRange.value = value;
             } else {
                 sliderRange.value = value + 1;
             }
@@ -100,15 +102,15 @@ export function initChart(iframe) {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             let x = d3.scaleLinear()
-                .domain([-40000,40000])
+                .domain([-600000,600000])
                 .range([0,width]);
 
             let xM = d3.scaleLinear()
-                .domain([-40000,0])
+                .domain([600000,0])
                 .range([0, width / 2]);
 
             let xF = d3.scaleLinear()
-                .domain([0,40000])
+                .domain([0,600000])
                 .range([width / 2, width]);
     
             svg.append("g")
@@ -117,14 +119,13 @@ export function initChart(iframe) {
     
             let y = d3.scaleBand()
                     .range([ 0, height ])
-                    .domain(d3.range(102).reverse())
+                    .domain(d3.range(101).reverse())
                     .padding(.1);
     
             svg.append("g")
                 .call(d3.axisLeft(y));
 
         function initPyramid(year) { //2021
-
             let currentData = data.filter( function(item) {
                 if (year == parseInt(item.Periodo)) {
                     return item;
@@ -134,11 +135,13 @@ export function initChart(iframe) {
             svg.append("g")
                 .selectAll("rect")
                 .data(currentData)
-                .join("rect")
-                .attr("fill", 'red')
-                .attr("x", d => d.sex === "M" ? xM(d.value) : xF(0))
+                .enter()
+                .append("rect")
+                .attr('class', 'prueba')
+                .attr("fill", function(d) { if(d.sexo == 'Hombres') { return COLOR_PRIMARY_1; } else { return COLOR_COMP_1; }})
+                .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
                 .attr("y", function(d) { return y(d.edades); })
-                .attr("width", d => d.sex === "M" ? xM(0) - xM(d.value) : xF(d.value) - xF(0))
+                .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }})
                 .attr("height", y.bandwidth());
 
         }
@@ -149,8 +152,16 @@ export function initChart(iframe) {
                     return item;
                 }
             });
+            
+            svg
+                .selectAll('.prueba')
+                .data(currentData)
+                .transition()
+                .duration(500)
+                .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
+                .attr("y", function(d) { return y(d.edades); })
+                .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }})
 
-            console.log(currentData);
         }
 
         function animatePyramid() {
