@@ -68,6 +68,120 @@ body, button {
             justify-content: space-between;
             flex-wrap: wrap;
         }
+
+        &__logics--bis { //Botones adicionales para animar el gráfico
+            display: flex;
+            flex-direction: column;
+
+            margin-top: 8px;
+
+            //Estilos del slider
+            .slider-control {
+                width: 100%;
+                display: flex;
+                align-items: center;
+
+                .slider-buttons {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 8px;
+                    flex-shrink: 0;
+                    width: 32px;
+                    height: 32px;
+                    background-color: #000;
+                    border-radius: 50%;
+                }
+                img.btnControl{
+                    cursor: pointer;
+                    transform: translateX(1px);  
+                }
+                img.btnControl#btnPause{
+                    display: none;
+                    transform: translateX(0px); 
+                }
+
+                .slider-text {
+                    font-size: 0.85rem;
+                    font-weight: normal;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: 1.25;
+                    letter-spacing: normal;
+                    color: #828282;
+                }
+            }
+            
+            .slider-container {
+                width: 100%;
+                margin-top: 6px;
+
+                .slider {
+                    -webkit-appearance: none;
+                    width: 100%;
+                    height: 15px;
+                    background: #d3d3d3;
+                    outline: none;
+                    opacity: 0.7;
+                    -webkit-transition: .2s;
+                    transition: opacity .2s;
+                    cursor: pointer;
+                }
+                  
+                .slider:hover {
+                    opacity: 1;
+                }
+                
+                .slider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 15px;
+                    height: 15px;
+                    background: #04AA6D;
+                    cursor: pointer;
+                }
+                
+                .slider::-moz-range-thumb {
+                    width: 15px;
+                    height: 15px;
+                    background: #04AA6D;
+                    cursor: pointer;
+                }
+
+                #slider-dates {
+                    display: flex;    
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    position: relative;
+                    font-size: 0.9rem;
+                    font-weight: bold;
+                    font-stretch: normal;
+                    font-style: normal;
+                    line-height: normal;
+                    color: #B4B4B4;
+    
+                    #minDate {
+                        position: relative;
+                    }
+                    #maxDate {
+                        position: relative;
+                    }
+                    #sliderDate {
+                        font-size: 0.9rem;
+                        font-weight: bold;
+                        font-stretch: normal;
+                        font-style: normal;
+                        line-height: normal;
+                        color: #000;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+            }
+        }
         
         //Debajo de todos los elementos lógicos tendremos la leyenda > Puede haber de 1 a 7 elementos dentro de la leyenda
         &__legend {
@@ -114,10 +228,8 @@ body, button {
 
         //Visualización
         &__viz {
-            height: 420px;
+            height: 406px;
             margin-top: 12px;
-
-            background-color: #c3c3c3;
 
             & .tick text {
                 font-family: 'Titillium Web';
@@ -138,24 +250,6 @@ body, button {
                 stroke: #000 !important;
                 stroke-width: 0.5px !important;
             }
-
-            //Tabla
-            &.viz-table {
-                width: 860px;
-                height: 520px;
-                margin-top: 12px;
-
-                background-color: #c3c3c3;
-                overflow-x: visible;
-
-                thead {
-                    background-color: red;
-                }
-
-                tbody {
-                    background-color: blue;
-                }
-            }
         }
 
         //Pie
@@ -173,6 +267,7 @@ body, button {
 
                 &--data {
                     margin-right: 16px;
+                    width: 85%;
                 }
 
                 &--data span:first-of-type {
@@ -228,7 +323,6 @@ body, button {
 
 //Estilos para botones
 .btn {
-    //Estilos genéricos
     margin-top: 8px;
     cursor: pointer;
     
@@ -244,7 +338,8 @@ body, button {
         height: auto;
         min-height: 32px;
 
-        border: 1.2px solid;       
+        border: 1.2px solid;
+        background-color: #fcfcfc;      
 
         &.active {
             background-color: #fff;
@@ -253,11 +348,27 @@ body, button {
 
     &__animate {
         height: 32px;
-        border: 1.2px solid #41C0B4;
+        border: 1.2px solid #E37A42;
         
         img {
             margin-right: 3px;
         }
+    }
+
+    &__chart {
+        cursor: pointer;
+        width: auto;
+        max-width: 120px;
+        height: 32px;
+        border: 0.6px solid #E37A42;
+        background-color: #d4d4d4;
+
+        &.active {
+            background-color: #fff;
+        }
+
+        &:first-of-type {margin-right: 8px;}
+        &:last-of-type {margin-left: 8px;}
     }
 }
 
@@ -289,14 +400,14 @@ body, button {
 }
 
 .link {
-    border-bottom: 2px solid #4E7E7E;
+    border-bottom: 2px solid #F8B05C;
     color: #000;
     text-decoration: none;
 }
 
 .btn_share {
-    background-color: #e1e1e1;
-    border: 2px solid #4E7E7E;
+    background-color: #fcfcfc;
+    border: 2px solid #F8B05C;
     padding: 0px 8px;
     border-radius: 3px;
 
@@ -317,7 +428,7 @@ body, button {
 //Pestañas inferiores
 .tabs {
     width: 100%;
-    height: 32px;
+    height: 28px;
 
     .l-tabs {
         width: 100%;
@@ -351,7 +462,7 @@ body, button {
             cursor: pointer;
 
             //Estilo
-            background-color: #fafbfd;
+            background-color: #fcfcfc;
             color: #000;
 
             //Estado active
@@ -360,7 +471,7 @@ body, button {
                 color: #000;
 
                 border-top: 0px;
-                border-bottom: 2px solid #4E7E7E;
+                border-bottom: 2px solid #F8B05C;
             }
         }        
     }
@@ -375,7 +486,7 @@ body, button {
     max-width: 135px;
     height: auto;
     padding: 8px;
-    background-color: #F4F4F4;
+    background-color: #fcfcfc;
 
     &--title {
         font-style: normal;

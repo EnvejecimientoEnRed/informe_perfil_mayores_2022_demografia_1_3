@@ -8,7 +8,7 @@
     <meta property='og:image' content=''>
     <meta property="og:title" content="Informe 2022: El perfil de las personas mayores en España">
     <meta property="og:description" content="Informe 2022: El perfil de las personas mayores en España">
-    <meta property="og:image" content="https://raw.githubusercontent.com/EnvejecimientoEnRed/envejecimiento_centenarios-supervivientes_evolucion/main/pre/cchs.png">
+    <meta property="og:image" content="https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_demografia_1_3/main/pre/cchs.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Titillium+Web%3A300%2C300italic%2C400%2C400italic%2C500%2C700%2C700italic&#038;subset=latin&#038;ver=5.8' type='text/css' media='all' />
 </head>
@@ -17,14 +17,13 @@
         <div class="main">
             <section class="content b-chart active" id="chartBlock">
                 <div class="b-title">
-                    <h1 class="title" id="title"></h1>
-                    <h2 class="subtitle" id="subtitle"></h2>
+                    <h1 class="title" id="title">Figura 1.3. Evolución de la población por sexo y edad (año a año) en España, 1908-2035</h1>
+                    <h2 class="subtitle" id="subtitle">Datos en valores absolutos (personas)</h2>
                 </div>
                 <div class="chart__logics">
                     <div class="chart__legend">
-                        <span class="chart__legend--item first">Ley. 1</span>
-                        <span class="chart__legend--item second">Ley. 2</span>
-                        <span class="chart__legend--item third">Ley. 3</span>
+                        <span class="chart__legend--item primary_1">Hombres</span>
+                        <span class="chart__legend--item comp_1">Mujeres</span>
                     </div>
                     <div class="chart__animate" id="replay">
                         <button class="btn btn__animate">
@@ -33,17 +32,34 @@
                         </button>
                     </div>                  
                 </div>
-                <div class="chart__viz" id="chart"></div> <!-- Posibilidad de cambiar chart__viz por chart__viz-table -->
+                <div class="chart__logics--bis">
+                    <div class="slider-control">
+                        <div class="slider-buttons">
+                            <img id="btnPlay" class="btnControl" src="https://raw.githubusercontent.com/EnvejecimientoEnRed/envejecimiento_alzheimer_mapa/main/pre/css/play.svg" width="16px" height="16px" alt="Play">
+                            <img id="btnPause" class="btnControl" src="https://raw.githubusercontent.com/EnvejecimientoEnRed/envejecimiento_alzheimer_mapa/main/pre/css/pause.svg" width="16px" height="16px" alt="Pausa">
+                        </div>
+                        <p class="slider-text">Dele al play o navegue por la barra para ver la evolución de la tasa específica de mortalidad por alzheimer a nivel autonómico</p>                
+                    </div>
+                    <div class="slider-container">
+                        <input id="slider" class="slider" type="range" min="1908" max="2035" value="2021"> 
+                        <div id="slider-dates">
+                            <div id="minDate">1908</div>
+                            <div id="sliderDate">2021</div>
+                            <div id="maxDate">2035</div>
+                        </div>               
+                    </div>
+                </div>
+                <div class="chart__viz" id="chart"></div>
                 <!-- Pie de gráfico -->
                 <div class="chart__footer">
                     <div class="chart__source">
-                        <p class="chart__source--data"><span>Fuente: </span><span id="data-source"></span> y Departamento de Población, CSIC</p>
+                        <p class="chart__source--data"><span>Fuente: </span><span id="data-source">Human Mortality Database (HMD): datos entre 1908 y 2019. Instituto Nacional de Estadística: Estadísticas del Padrón continuo (2020-2021) y proyecciones de población (2022-2035)</span> y Departamento de Población, CSIC</p>
                         <p class="chart__source--copyright"><a class="link" href="https://creativecommons.org/licenses/by/4.0/deed.en_US" target="_blank">CC BY 4.0</a></p>
                     </div>
-                    <p class="chart__note"><span>Notas: </span><span id="data-note"></span></p>
+                    <p class="chart__note"><span>Notas: </span><span id="data-note">De 1908 a 2021 los datos son reales. De 2022 a 2035 son proyecciones.</span></p>
                 </div>
                 <div class="logo">
-                    <img src="https://raw.githubusercontent.com/EnvejecimientoEnRed/envejecimiento_centenarios-supervivientes_evolucion/main/pre/cchs.png" alt="Logo del Centro de Ciencias Humanas y Sociales" width="100%" height="100%">
+                    <img src="https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_demografia_1_3/main/pre/cchs.png" alt="Logo del Centro de Ciencias Humanas y Sociales" width="100%" height="100%">
                 </div>         
             </section>
             <section class="content b-data">
@@ -51,12 +67,12 @@
                     <h1 class="title">Repositorio de código, de datos y posibilidad de descarga como imagen estática</h1>
                 </div>
                 <p class="text__header">Descarga de datos</p>
-                <p class="text__paragraph">Los datos procesados en esta visualización los puede encontrar en <a class="link" href="https://github.com/EnvejecimientoEnRed/envejecimiento_centenarios-supervivientes_evolucion" target="_blank">este repositorio de Github</a>.</p>
-                <p class="text__paragraph">Si desea descargarlos, puede hacerlo desde <a class="link" href="https://raw.githubusercontent.com/EnvejecimientoEnRed/envejecimiento_centenarios-supervivientes_evolucion/main/data/evolucion_supervivientes.csv" target="_blank">aquí</a>.</p>
+                <p class="text__paragraph">Los datos procesados en esta visualización los puede encontrar en <a class="link" href="https://github.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_demografia_1_3" target="_blank">este repositorio de Github</a>.</p>
+                <p class="text__paragraph">Si desea descargarlos, puede hacerlo desde <a class="link" href="https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_demografia_1_3/main/data/evolucion_supervivientes.csv" target="_blank">aquí</a>.</p>
                 <p class="text__header">Descargar como PNG</p>
                 <p class="text__paragraph">También puede descargar el gráfico como una imagen .png haciendo click <button class="btn_share" id="pngImage">aquí</button></p> 
                 <p class="text__paragraph">El gráfico se descargará con los últimos filtros que haya utilizado.</p>
-                <p class="text__paragraph">Es conveniente advertir que, tras hacer una modificación de filtros, debe esperar unos segundos (entre 10 y 15) para que se renderice correctamente el bloque y pueda descargar la imagen de forma satisfactoria.</p>
+                <p class="text__paragraph">Es conveniente advertir que, tras hacer una modificación de filtros, debe esperar unos segundos (entre 5 y 10) para que se renderice correctamente el bloque y pueda descargar la imagen de forma satisfactoria.</p>
             </section>
             <section class="content b-iframes">
                 <div class="b-title">
@@ -67,7 +83,7 @@
                 <p class="text__paragraph">Si su sitio web acepta el uso de librerías de terceros, como es el caso de Pym.js, y desea disponer la opción responsiva de esta visualización, copie el siguiente código:</p>
                 <textarea class="text__iframe" disabled="" id="iframe-responsive"></textarea>
                 <p class="text__header">Embeber iframe con alto fijo</p>
-                <p class="text__paragraph">Aunque el siguiente iframe tiene una altura fija -680px-, el gráfico se ve correctamente en todos los dispositivos ya que siempre se ajusta al alto disponible que dejan otros elementos como títulos, selectores, botones o leyenda.</p>             
+                <p class="text__paragraph">Si su sitio web no acepta iframes responsivos, puede utilizar el siguiente código con altura fija. En algunos gráficos del informe (tablas y visualizaciones largas en vertical) es posible que exista scroll vertical al incrustar el iframe en su página web.</p>             
                 <p class="text__paragraph">Si desea integrar esta visualización en su propia página, puede hacerlo copiando el siguiente código:</p>
                 <textarea class="text__iframe" disabled="" id="iframe-fixed"></textarea>
             </section>
