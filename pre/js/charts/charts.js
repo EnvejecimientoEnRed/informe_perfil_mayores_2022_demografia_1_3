@@ -101,29 +101,29 @@ export function initChart(iframe) {
             .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            let x = d3.scaleLinear()
-                .domain([-600000,600000])
-                .range([0,width]);
+        let x = d3.scaleLinear()
+            .domain([-600000,600000])
+            .range([0,width]);
 
-            let xM = d3.scaleLinear()
-                .domain([600000,0])
-                .range([0, width / 2]);
+        let xM = d3.scaleLinear()
+            .domain([600000,0])
+            .range([0, width / 2]);
 
-            let xF = d3.scaleLinear()
-                .domain([0,600000])
-                .range([width / 2, width]);
-    
-            svg.append("g")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
-    
-            let y = d3.scaleBand()
-                    .range([ 0, height ])
-                    .domain(d3.range(101).reverse())
-                    .padding(.1);
-    
-            svg.append("g")
-                .call(d3.axisLeft(y));
+        let xF = d3.scaleLinear()
+            .domain([0,600000])
+            .range([width / 2, width]);
+
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        let y = d3.scaleBand()
+                .range([ 0, height ])
+                .domain(d3.range(101).reverse())
+                .padding(.1);
+
+        svg.append("g")
+            .call(d3.axisLeft(y));
 
         function initPyramid(year) { //2021
             let currentData = data.filter( function(item) {
@@ -143,7 +143,6 @@ export function initChart(iframe) {
                 .attr("y", function(d) { return y(d.edades); })
                 .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }})
                 .attr("height", y.bandwidth());
-
         }
 
         function updatePyramid(year) {
