@@ -143,6 +143,7 @@ export function initChart(iframe) {
                 .attr("y", function(d) { return y(d.edades); })
                 .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }})
                 .attr("height", y.bandwidth());
+
         }
 
         function updatePyramid(year) {
