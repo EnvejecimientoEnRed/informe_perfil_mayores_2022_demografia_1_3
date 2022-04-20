@@ -1,23 +1,15 @@
 //Desarrollo de las visualizaciones
 import * as d3 from 'd3';
-//import { numberWithCommas2 } from './helpers';
-//import { getInTooltip, getOutTooltip, positionTooltip } from './modules/tooltip';
+import { numberWithCommas3 } from '../helpers';
+import { getInTooltip, getOutTooltip, positionTooltip } from '../modules/tooltip';
 import { setChartHeight } from '../modules/height';
 import { setChartCanvas, setChartCanvasImage } from '../modules/canvas-image';
 import { setRRSSLinks } from '../modules/rrss';
 import { setFixedIframeUrl } from './chart_helpers';
 
 //Colores fijos
-const COLOR_PRIMARY_1 = '#F8B05C', 
-COLOR_PRIMARY_2 = '#E37A42',
-COLOR_COMP_1 = '#528FAD', 
-COLOR_COMP_2 = '#AADCE0',
-COLOR_GREY_1 = '#D6D6D6', 
-COLOR_GREY_2 = '#A3A3A3',
-COLOR_ANAG__PRIM_1 = '#BA9D5F', 
-COLOR_ANAG_PRIM_2 = '#9E6C51',
-COLOR_ANAG_PRIM_3 = '#9E3515',
-COLOR_ANAG_ANAG_1 = '#1C5A5E';
+const COLOR_PRIMARY_1 = '#F8B05C';
+let tooltip = d3.select('#tooltip');
 
 export function initChart(iframe) {
     //Creación de otros elementos relativos al gráfico que no requieran lectura previa de datos > Selectores múltiples o simples, timelines, etc 
@@ -89,10 +81,10 @@ export function initChart(iframe) {
         /////
         /////
 
-        ///Valores iniciales de altura, anchura y márgenes
-        let margin = {top: 20, right: 30, bottom: 40, left: 90},
+        ///valores iniciales de altura, anchura y márgenes
+        let margin = {top: 10, right: 25, bottom: 20, left: 70},
             width = document.getElementById('chart').clientWidth - margin.left - margin.right,
-            height = document.getElementById('chart').clientHeight - margin.top - margin.bottom;
+            height = width * 0.67 - margin.top - margin.bottom;
 
         let svg = d3.select("#chart")
             .append("svg")
@@ -113,19 +105,38 @@ export function initChart(iframe) {
             .domain([0,600000])
             .range([width / 2, width]);
 
+        let xAxis = function(svg) {
+            svg.call(d3.axisBottom(x).ticks(6).tickFormat(function(d) { return numberWithCommas3(Math.abs(d)); }));
+            svg.call(function(g){
+                g.selectAll('.tick line')
+                    .attr('class', function(d,i) {
+                        if (d == 0) {
+                            return 'line-special';
+                        }
+                    })
+                    .attr('y1', '0')
+                    .attr('y2', `-${height}`)
+            });
+        }
+
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
+            .call(xAxis);
 
         let y = d3.scaleBand()
                 .range([ 0, height ])
-                .domain(d3.range(101).reverse())
+                .domain(data.map(function(item) { return item.edades; }).reverse())
                 .padding(.1);
 
-        svg.append("g")
-            .call(d3.axisLeft(y));
+            let yAxis = function(svg) {
+                svg.call(d3.axisLeft(y).tickValues(y.domain().filter(function(d,i){ return !(i%10)})));
+                svg.call(function(g){g.selectAll('.tick line').remove()});
+            }
+    
+            svg.append("g")
+                .call(yAxis);
 
-        function initPyramid(year) { //2021
+        function initPyramid(year) {
             let currentData = data.filter( function(item) {
                 if (year == parseInt(item.Periodo)) {
                     return item;
@@ -138,11 +149,38 @@ export function initChart(iframe) {
                 .enter()
                 .append("rect")
                 .attr('class', 'prueba')
-                .attr("fill", function(d) { if(d.sexo == 'Hombres') { return COLOR_PRIMARY_1; } else { return COLOR_COMP_1; }})
-                .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
+                .attr("fill", COLOR_PRIMARY_1)
+                .attr("x", x(0))
                 .attr("y", function(d) { return y(d.edades); })
-                .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }})
-                .attr("height", y.bandwidth());
+                .attr("width", 0)
+                .attr("height", y.bandwidth())
+                .on('mouseover', function(d,i,e) {
+                    //Dibujo contorno de la rect
+                    this.style.stroke = '#000';
+                    this.style.strokeWidth = '1';
+
+                    //Texto en tooltip
+                    let html = '<p class="chart__tooltip--title">' + d.sexo + ' con ' + d.edades + ' años en ' + d.Periodo + '</p>' + 
+                        '<p class="chart__tooltip--text">Número absoluto de personas: ' + numberWithCommas3(parseInt(d.valor))+ '</p>';
+                
+                    tooltip.html(html);
+
+                    //Tooltip
+                    positionTooltip(window.event, tooltip);
+                    getInTooltip(tooltip);
+                })
+                .on('mouseout', function(d,i,e) {
+                    //Fuera contorno
+                    this.style.stroke = 'none';
+                    this.style.strokeWidth = '0';
+
+                    //Fuera tooltip
+                    getOutTooltip(tooltip);
+                })
+                .transition()
+                .duration(2000)
+                .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
+                .attr('width', function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }});
 
         }
 
@@ -153,24 +191,61 @@ export function initChart(iframe) {
                 }
             });
             
-            svg
-                .selectAll('.prueba')
+            svg.selectAll('.prueba')
                 .data(currentData)
                 .transition()
                 .duration(500)
                 .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
                 .attr("y", function(d) { return y(d.edades); })
-                .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }})
-
+                .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }});
         }
 
-        function animatePyramid() {
+        function animatePyramid(year) {
             //Como si parasemos el slider
             clearInterval(sliderInterval);
             playButton.style.display = 'inline-block';
             pauseButton.style.display = 'none';
 
             //Desarrollamos la animación
+            let currentData = data.filter( function(item) {
+                if (year == parseInt(item.Periodo)) {
+                    return item;
+                }
+            });
+            
+            svg.selectAll('.prueba')
+                .data(currentData)
+                .attr("x", x(0))
+                .attr("y", function(d) { return y(d.edades); })
+                .attr("width", 0)
+                .attr("height", y.bandwidth())
+                .on('mouseover', function(d,i,e) {
+                    //Dibujo contorno de la rect
+                    this.style.stroke = '#000';
+                    this.style.strokeWidth = '1';
+
+                    //Texto en tooltip
+                    let html = '<p class="chart__tooltip--title">' + d.sexo + ' con ' + d.edades + ' años en ' + d.Periodo + '</p>' + 
+                        '<p class="chart__tooltip--text">Número absoluto de personas: ' + numberWithCommas3(parseInt(d.valor))+ '</p>';
+                
+                    tooltip.html(html);
+
+                    //Tooltip
+                    positionTooltip(window.event, tooltip);
+                    getInTooltip(tooltip);
+                })
+                .on('mouseout', function(d,i,e) {
+                    //Fuera contorno
+                    this.style.stroke = 'none';
+                    this.style.strokeWidth = '0';
+
+                    //Fuera tooltip
+                    getOutTooltip(tooltip);
+                })
+                .transition()
+                .duration(2000)
+                .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
+                .attr('width', function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }});
         }
 
         /////
@@ -183,7 +258,7 @@ export function initChart(iframe) {
 
         //Animación del gráfico
         document.getElementById('replay').addEventListener('click', function() {
-            animatePyramid();
+            animatePyramid(currentValue);
         });
 
         /////

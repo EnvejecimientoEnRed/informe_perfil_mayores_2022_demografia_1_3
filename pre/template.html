@@ -22,8 +22,6 @@
                 </div>
                 <div class="chart__logics">
                     <div class="chart__legend">
-                        <span class="chart__legend--item primary_1">Hombres</span>
-                        <span class="chart__legend--item comp_1">Mujeres</span>
                     </div>
                     <div class="chart__animate" id="replay">
                         <button class="btn btn__animate">
@@ -49,7 +47,17 @@
                         </div>               
                     </div>
                 </div>
-                <div class="chart__viz" id="chart"></div>
+                <div class="chart__viz">
+                    <div class="chart--y_text">
+                        <p class="text__yaxis">Edad</p>
+                        <div class="chart--text">
+                            <p class="text__yaxis">Hombres</p>
+                            <p class="text__yaxis">Mujeres</p>
+                        </div>
+                    </div>                    
+                    <div class="chart--viz" id="chart"></div>
+                    <p class="text__xaxis">Personas</p>
+                </div>
                 <!-- Pie de gráfico -->
                 <div class="chart__footer">
                     <div class="chart__source">
