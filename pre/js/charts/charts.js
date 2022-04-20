@@ -181,7 +181,6 @@ export function initChart(iframe) {
                 .duration(2000)
                 .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
                 .attr('width', function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }});
-
         }
 
         function updatePyramid(year) {
