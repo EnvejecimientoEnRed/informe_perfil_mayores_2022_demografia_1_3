@@ -11,7 +11,7 @@ import { setFixedIframeUrl } from './chart_helpers';
 const COLOR_PRIMARY_1 = '#F8B05C';
 let tooltip = d3.select('#tooltip');
 
-export function initChart(iframe) {
+export function initChart() {
     //Creación de otros elementos relativos al gráfico que no requieran lectura previa de datos > Selectores múltiples o simples, timelines, etc 
 
     //Lectura de datos
@@ -197,6 +197,10 @@ export function initChart(iframe) {
                 .attr("x", function(d) { if(d.sexo == 'Hombres') { return xM(d.valor); } else { return xF(0); }})
                 .attr("y", function(d) { return y(d.edades); })
                 .attr("width", function(d) { if(d.sexo == 'Hombres') { return xM(0) - xM(d.valor); } else { return xF(d.valor) - xF(0); }});
+
+            setTimeout(() => {
+                setChartCanvas();
+            }, 4000);
         }
 
         function animatePyramid(year) {
@@ -258,6 +262,10 @@ export function initChart(iframe) {
         //Animación del gráfico
         document.getElementById('replay').addEventListener('click', function() {
             animatePyramid(currentValue);
+
+            setTimeout(() => {
+                setChartCanvas();
+            }, 4000);
         });
 
         /////
@@ -273,7 +281,9 @@ export function initChart(iframe) {
         setRRSSLinks('proyecciones_sexo_edad');
 
         //Captura de pantalla de la visualización
-        setChartCanvas();
+        setTimeout(() => {
+            setChartCanvas();
+        }, 4000);
 
         let pngDownload = document.getElementById('pngImage');
 
@@ -282,6 +292,6 @@ export function initChart(iframe) {
         });
 
         //Altura del frame
-        setChartHeight(iframe);
+        setChartHeight();
     });    
 }
