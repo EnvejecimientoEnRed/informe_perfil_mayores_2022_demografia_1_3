@@ -82,7 +82,7 @@ export function initChart() {
         /////
 
         ///valores iniciales de altura, anchura y márgenes
-        let margin = {top: 10, right: 25, bottom: 20, left: 70},
+        let margin = {top: 12.5, right: 25, bottom: 25, left: 70},
             width = document.getElementById('chart').clientWidth - margin.left - margin.right,
             height = width * 0.67 - margin.top - margin.bottom;
 
@@ -161,7 +161,7 @@ export function initChart() {
 
                     //Texto en tooltip
                     let html = '<p class="chart__tooltip--title">' + d.sexo + ' con ' + d.edades + ' años en ' + d.Periodo + '</p>' + 
-                        '<p class="chart__tooltip--text">Número absoluto de personas: ' + numberWithCommas3(parseInt(d.valor))+ '</p>';
+                        '<p class="chart__tooltip--text">Número absoluto de personas: <b>' + numberWithCommas3(parseInt(d.valor))+ '</b></p>';
                 
                     tooltip.html(html);
 
@@ -229,7 +229,7 @@ export function initChart() {
 
                     //Texto en tooltip
                     let html = '<p class="chart__tooltip--title">' + d.sexo + ' con ' + d.edades + ' años en ' + d.Periodo + '</p>' + 
-                        '<p class="chart__tooltip--text">Número absoluto de personas: ' + numberWithCommas3(parseInt(d.valor))+ '</p>';
+                        '<p class="chart__tooltip--text">Número absoluto de personas: <b>' + numberWithCommas3(parseInt(d.valor))+ '</b></p>';
                 
                     tooltip.html(html);
 
