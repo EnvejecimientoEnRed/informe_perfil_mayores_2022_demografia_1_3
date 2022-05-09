@@ -84,7 +84,8 @@ export function initChart() {
         ///valores iniciales de altura, anchura y márgenes
         let margin = {top: 12.5, right: 25, bottom: 25, left: 70},
             width = document.getElementById('chart').clientWidth - margin.left - margin.right,
-            height = width * 0.67 - margin.top - margin.bottom;
+            auxHeight = width * 0.67 - margin.top - margin.bottom,
+            height = auxHeight < 180 ? 180 : auxHeight;
 
         let svg = d3.select("#chart")
             .append("svg")
